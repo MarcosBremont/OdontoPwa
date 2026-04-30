@@ -391,8 +391,8 @@
     @media (max-width: 900px) {
       #inicio { grid-template-columns: 1fr; padding: 6rem 5% 3rem; }
       .hero-img-col { display: none; }
-      #sobre-mi { grid-template-columns: 1fr; }
-      .sobre-img { display: flex; }
+      #sobre-mi { grid-template-columns: 1fr; justify-items: center; }
+      .sobre-img { display: flex; margin: 0 auto; }
       .cita-wrapper { grid-template-columns: 1fr; }
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; flex-direction: column; gap: 1rem; }
@@ -838,9 +838,11 @@
     e.preventDefault();
     const nombre = document.getElementById('nombre').value.trim();
     const telefono = document.getElementById('telefono').value.trim();
+    const email = document.getElementById('email').value.trim();
     const fecha = document.getElementById('fecha').value;
     const hora = document.getElementById('hora').value;
     const servicio = document.getElementById('servicio').value;
+    const nota = document.getElementById('nota').value.trim();
 
     if (!nombre || !telefono || !fecha || !hora) {
       showToast('⚠️ Por favor completa los campos obligatorios.');
@@ -853,9 +855,13 @@
     setTimeout(() => {
       btn.disabled = false; btn.textContent = 'Enviar solicitud de cita';
 
-      // Mostrar modal
       const horaLabel = document.querySelector(`#hora option[value="${hora}"]`)?.textContent || hora;
       const fechaFmt = new Date(fecha + 'T12:00:00').toLocaleDateString('es-DO', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+      const subject = `Solicitud de cita - ${nombre}`;
+      const bodyText = `Nombre: ${nombre}\nTeléfono: ${telefono}\nCorreo: ${email || 'No proporcionado'}\nFecha: ${fechaFmt}\nHora: ${horaLabel}\nServicio: ${servicio || 'No especificado'}\nNota: ${nota || 'No proporcionada'}`;
+      window.location.href = `mailto:Genesisigr@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+
+      // Mostrar modal de confirmación local
       document.getElementById('modalResumen').innerHTML = `
         <p>👤 <strong>${nombre}</strong></p>
         <p>📅 ${fechaFmt}</p>
